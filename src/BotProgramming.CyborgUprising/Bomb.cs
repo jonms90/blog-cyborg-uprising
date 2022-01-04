@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BotProgramming.CyborgUprising
 {
-    public class Class1
+    public class Bomb
     {
     }
 }

@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C1588AAD-B792-4086-AA82-5760642513F9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		BotGenerator.ps1 = BotGenerator.ps1
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject

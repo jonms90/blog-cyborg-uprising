@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BotProgramming.CyborgUprising
 {
     public class Bot
     {
+        private Battlefield _battlefield;
+
         /// <summary>
         /// Game initialization parsing input describing the graph that contains the randomly generated battlefield.
         /// </summary>
@@ -12,14 +15,16 @@ namespace BotProgramming.CyborgUprising
             // TODO: Replace default initialization code.
             var factoryCount = int.Parse(Console.ReadLine());
             var linkCount = int.Parse(Console.ReadLine()); // the number of links between factories
+            _battlefield = new Battlefield();
             for (var i = 0; i < linkCount; i++)
             {
                 var inputs = Console.ReadLine().Split(' ');
-                var factory1 = int.Parse(inputs[0]);
-                var factory2 = int.Parse(inputs[1]);
+                var factoryId = int.Parse(inputs[0]);
+                var adjacentFactoryId = int.Parse(inputs[1]);
                 var distance = int.Parse(inputs[2]);
-                Console.Error.WriteLine($"Link #{i} between {factory1} and {factory2} has distance {distance}");
+                _battlefield.AddFactories(factoryId, adjacentFactoryId, distance);
             }
+
         }
 
         public void Update()

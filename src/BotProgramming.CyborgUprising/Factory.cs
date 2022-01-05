@@ -8,6 +8,10 @@ namespace BotProgramming.CyborgUprising
         public int Id { get; set; }
         public IDictionary<Factory, int> ConnectedFactories { get; }
 
+        /// <summary>
+        /// Instantiates a factory with a given Id without any known adjacent neighbors.
+        /// </summary>
+        /// <param name="id">The id of the factory</param>
         public Factory(int id)
         {
             Id = id;
@@ -18,17 +22,17 @@ namespace BotProgramming.CyborgUprising
         /// Adds a factory as an adjacent factory.
         /// Since the game is based on an undirected graph, we add the connection both ways.
         /// </summary>
-        /// <param name="adjacentFactory">An adjacent factory</param>
+        /// <param name="neighbor">An adjacent factory neighbor</param>
         /// <param name="distance">The distance between factories measured in number of game turns</param>
-        public void AddAdjacentFactory(Factory adjacentFactory, int distance)
+        public void AddBidirectionalNeighbor(Factory neighbor, int distance)
         {
-            if (ConnectedFactories.ContainsKey(adjacentFactory))
+            if (ConnectedFactories.ContainsKey(neighbor))
             {
                 return;
             }
 
-            ConnectedFactories.Add(adjacentFactory, distance);
-            adjacentFactory.AddAdjacentFactory(this, distance);
+            ConnectedFactories.Add(neighbor, distance);
+            neighbor.AddBidirectionalNeighbor(this, distance);
         }
 
         public bool Equals(Factory x, Factory y)

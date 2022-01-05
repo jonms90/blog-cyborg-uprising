@@ -10,7 +10,7 @@ namespace BotProgramming.CyborgUprising.Tests.FactoryTests
             var factory = new Factory(1);
             var adjacent = new Factory(2);
             const int distance = 2;
-            factory.AddAdjacentFactory(adjacent, distance);
+            factory.AddBidirectionalNeigbor(adjacent, distance);
             var factories = factory.ConnectedFactories;
             Assert.Equal(1, factories.Count);
             Assert.Equal(distance, factories[adjacent]);
@@ -21,8 +21,8 @@ namespace BotProgramming.CyborgUprising.Tests.FactoryTests
         {
             var factory = new Factory(1);
             var adjacentFactory = new Factory(2);
-            factory.AddAdjacentFactory(adjacentFactory, 1);
-            factory.AddAdjacentFactory(adjacentFactory, 1);
+            factory.AddBidirectionalNeigbor(adjacentFactory, 1);
+            factory.AddBidirectionalNeigbor(adjacentFactory, 1);
             Assert.Equal(1, factory.ConnectedFactories.Count);
         }
 
@@ -32,7 +32,7 @@ namespace BotProgramming.CyborgUprising.Tests.FactoryTests
             var factory = new Factory(1);
             var adjacent = new Factory(2);
             const int distance = 3;
-            factory.AddAdjacentFactory(adjacent, distance);
+            factory.AddBidirectionalNeigbor(adjacent, distance);
             Assert.Equal(1, factory.ConnectedFactories.Count);
             Assert.Equal(distance, adjacent.ConnectedFactories[factory]);
         }

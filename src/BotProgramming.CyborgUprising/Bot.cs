@@ -23,7 +23,6 @@ namespace BotProgramming.CyborgUprising
                 var distance = int.Parse(inputs[2]);
                 _battlefield.AddFactories(factoryId, adjacentFactoryId, distance);
             }
-
         }
 
         public void Update()

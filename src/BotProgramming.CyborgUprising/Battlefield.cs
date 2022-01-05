@@ -15,7 +15,7 @@ namespace BotProgramming.CyborgUprising
         {
             EnsureCreated(factoryId);
             EnsureCreated(adjacentFactoryId);
-            Factories[factoryId].AddBidirectionalNeigbor(Factories[adjacentFactoryId], distance);
+            Factories[factoryId].AddBidirectionalNeighbor(Factories[adjacentFactoryId], distance);
         }
 
         private void EnsureCreated(int factoryId)

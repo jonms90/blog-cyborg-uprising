@@ -51,6 +51,9 @@ namespace BotProgramming.CyborgUprising
                 throw new ArgumentException("Target is equal to source", nameof(target));
             }
 
+            var sourceFactory = Factories[source.Id];
+            var destinationFactory = Factories[target.Id];
+
             var shortestPathsFromSource = new Dictionary<Factory, int>();
             var previousStopoverFactory =
                 new Dictionary<Factory, Factory>();
@@ -58,8 +61,8 @@ namespace BotProgramming.CyborgUprising
             var visitedFactories = new Dictionary<Factory, bool>();
             var unvisitedFactories = new HashSet<Factory>(Factories.Count);
 
-            shortestPathsFromSource.Add(source, 0);
-            var currentFactory = source;
+            shortestPathsFromSource.Add(sourceFactory, 0);
+            var currentFactory = sourceFactory;
 
             while (currentFactory != null)
             {
@@ -91,8 +94,8 @@ namespace BotProgramming.CyborgUprising
             }
 
             var shortestPath = new List<Factory>();
-            var destination = target;
-            while (destination != source)
+            var destination = destinationFactory;
+            while (destination != sourceFactory)
             {
                 shortestPath.Add(destination);
                 destination = previousStopoverFactory[destination];

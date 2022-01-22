@@ -10,6 +10,17 @@
         {
             Id = id;
             Team = team;
+            Type = type;
+        }
+
+        public bool IsFriendlyFactory()
+        {
+            return Type == EntityType.Factory && Team == Team.Friendly;
+        }
+
+        public bool IsEnemyFactory()
+        {
+            return Type == EntityType.Factory && Team == Team.Enemy;
         }
     }
 }

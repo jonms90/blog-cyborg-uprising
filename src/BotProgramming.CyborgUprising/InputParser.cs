@@ -33,21 +33,13 @@ namespace BotProgramming.CyborgUprising
             var arg3 = int.Parse(inputs[4]);
             var arg4 = int.Parse(inputs[5]);
             var arg5 = int.Parse(inputs[6]);
-            Entity entity = null;
-            switch (entityType)
+            Entity entity = entityType switch
             {
-                case Factory:
-                    entity = new Factory(entityId, team, arg2, arg3, arg4);
-                    break;
-                case Troop:
-                    entity = new Troop(entityId, team, arg2, arg3, arg4, arg5);
-                    break;
-                case Bomb:
-                    entity = new Bomb(entityId, team, arg2, arg3, arg4);
-                    break;
-                default:
-                    throw new SwitchExpressionException($"Unknown entity type: {entityType}");
-            }
+                Factory => new Factory(entityId, team, arg2, arg3, arg4),
+                Troop => new Troop(entityId, team, arg2, arg3, arg4, arg5),
+                Bomb => new Bomb(entityId, team, arg2, arg3, arg4),
+                _ => throw new SwitchExpressionException($"Unknown entity type: {entityType}")
+            };
 
             return entity;
         }

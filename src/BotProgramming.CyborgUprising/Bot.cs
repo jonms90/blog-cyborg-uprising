@@ -61,6 +61,10 @@ namespace BotProgramming.CyborgUprising
                 }
             }
 
+            if (_commands.Count == 0)
+            {
+                _commands.Add("WAIT");
+            }
             Console.WriteLine(string.Join(';', _commands));
         }
     }

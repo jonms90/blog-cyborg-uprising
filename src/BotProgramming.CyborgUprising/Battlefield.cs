@@ -22,11 +22,11 @@ namespace BotProgramming.CyborgUprising
             Factories = factories;
         }
 
-        public void AddFactories(int factoryId, int adjacentFactoryId, int distance)
+        public void AddFactories(Link link)
         {
-            EnsureCreated(factoryId);
-            EnsureCreated(adjacentFactoryId);
-            Factories[factoryId].AddBidirectionalNeighbor(Factories[adjacentFactoryId], distance);
+            EnsureCreated(link.FactoryId);
+            EnsureCreated(link.AdjacentFactoryId);
+            Factories[link.FactoryId].AddBidirectionalNeighbor(Factories[link.AdjacentFactoryId], link.Distance);
         }
 
         private void EnsureCreated(int factoryId)

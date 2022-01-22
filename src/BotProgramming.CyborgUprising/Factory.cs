@@ -3,18 +3,27 @@ using System.Collections.Generic;
 
 namespace BotProgramming.CyborgUprising
 {
-    public class Factory : IEqualityComparer<Factory>
+    public class Factory : Entity, IEqualityComparer<Factory>
     {
-        public int Id { get; set; }
+        public int Cyborgs { get; }
+        public int Production { get; }
+        public int Cooldown { get; }
         public IDictionary<Factory, int> ConnectedFactories { get; }
 
         /// <summary>
         /// Instantiates a factory with a given Id without any known adjacent neighbors.
         /// </summary>
         /// <param name="id">The id of the factory</param>
-        public Factory(int id)
+        public Factory(int id) : base(id, EntityType.Factory)
         {
-            Id = id;
+            ConnectedFactories = new Dictionary<Factory, int>();
+        }
+
+        public Factory(int id, Team team, int cyborgs, int production, int cooldown) : base(id, EntityType.Factory, team)
+        {
+            Cyborgs = cyborgs;
+            Production = production;
+            Cooldown = cooldown;
             ConnectedFactories = new Dictionary<Factory, int>();
         }
 
@@ -57,7 +66,7 @@ namespace BotProgramming.CyborgUprising
                 return false;
             }
 
-            return x.Id == y.Id && Equals(x.ConnectedFactories, y.ConnectedFactories);
+            return x.Id == y.Id;
         }
 
         public int GetHashCode(Factory obj)

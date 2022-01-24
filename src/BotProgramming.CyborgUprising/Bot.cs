@@ -6,11 +6,12 @@ namespace BotProgramming.CyborgUprising
 {
     public class Bot
     {
-        private Battlefield _battlefield;
+        public static Battlefield Battlefield;
         private InputParser _inputParser;
-        private List<Factory> _factories;
-        private List<Factory> _targets;
-        private List<string> _commands;
+        public static List<Factory> Factories;
+        public static List<Factory> Targets;
+        public static List<string> Commands;
+        private BehaviorTree _behavior;
 
         /// <summary>
         /// Game initialization parsing input describing the graph that contains the randomly generated battlefield.
@@ -18,54 +19,68 @@ namespace BotProgramming.CyborgUprising
         public void Initialize()
         {
             _inputParser = new InputParser();
-            _battlefield = new Battlefield();
-            _factories = new List<Factory>();
-            _targets = new List<Factory>();
-            _commands = new List<string>();
+            Battlefield = new Battlefield();
+            Factories = new List<Factory>();
+            Targets = new List<Factory>();
+            Commands = new List<string>();
+            _behavior = new BehaviorTree("Bot");
+            var strategy = new Selector("Strategy");
+            var attack = new LaunchAttack("Launch Attack");
+            strategy.AddChild(attack);
+            strategy.AddChild(new Leaf("Wait", ExecuteWaitCommand));
+            _behavior.AddChild(strategy);
             var factoryCount = _inputParser.ParseNextInteger();
             var linkCount = _inputParser.ParseNextInteger();
             for (var i = 0; i < linkCount; i++)
             {
                 var link = _inputParser.ParseNextLink();
-                _battlefield.AddFactories(link);
+                Battlefield.AddFactories(link);
             }
         }
 
         public void Update()
         {
-            _factories.Clear();
-            _targets.Clear();
-            _commands.Clear();
+            Factories.Clear();
+            Targets.Clear();
+            Commands.Clear();
             var entityCount = _inputParser.ParseNextInteger();
             for (var i = 0; i < entityCount; i++)
             {
                 var entity = _inputParser.ParseNextEntity();
                 if (entity.IsFriendlyFactory())
                 {
-                    _factories.Add((Factory)entity);
+                    Factories.Add((Factory)entity);
                 }
                 else if (entity.IsEnemyFactory())
                 {
-                    _targets.Add((Factory)entity);
+                    Targets.Add((Factory)entity);
                 }
             }
 
-            foreach (var factory in _factories)
-            {
-                var target = _targets.FirstOrDefault();
-                if (target != null)
-                {
-                    var destination =
-                        _battlefield.NextFactoryOnShortestPathBetween(factory, target);
-                    _commands.Add($"MOVE {factory.Id} {destination.Id} {factory.Cyborgs}");
-                }
-            }
+            _behavior.Process();
 
-            if (_commands.Count == 0)
-            {
-                _commands.Add("WAIT");
-            }
-            Console.WriteLine(string.Join(';', _commands));
+            //foreach (var factory in _factories)
+            //{
+            //    var target = _targets.FirstOrDefault();
+            //    if (target != null)
+            //    {
+            //        var destination =
+            //            _battlefield.NextFactoryOnShortestPathBetween(factory, target);
+            //        _commands.Add($"MOVE {factory.Id} {destination.Id} {factory.Cyborgs}");
+            //    }
+            //}
+
+            //if (_commands.Count == 0)
+            //{
+            //    _commands.Add("WAIT");
+            //}
+            Console.WriteLine(string.Join(';', Commands));
+        }
+
+        public Node.NodeStatus ExecuteWaitCommand()
+        {
+            Bot.Commands.Add("WAIT");
+            return Node.NodeStatus.Success;
         }
     }
 }

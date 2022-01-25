@@ -21,6 +21,11 @@ namespace BotProgramming.CyborgUprising
             ProcessMethod = pm;
         }
 
+        public Leaf(string name, Tick pm, int priority) : base(name, priority)
+        {
+            ProcessMethod = pm;
+        }
+
         public override NodeStatus Process()
         {
             if (ProcessMethod != null)

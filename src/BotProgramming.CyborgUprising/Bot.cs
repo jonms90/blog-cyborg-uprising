@@ -38,8 +38,8 @@ namespace BotProgramming.CyborgUprising
             strategy.AddChild(succeeder);
 
             var fallbackWait = new Sequence("Fallback Wait");
-            var hasCommands = new Leaf("Has issued commands", HasIssuedCommands);
             var inverter = new Inverter("Commands Inverter");
+            var hasCommands = new Leaf("Has issued commands", HasIssuedCommands);
             inverter.AddChild(hasCommands);
             fallbackWait.AddChild(inverter);
             fallbackWait.AddChild(new Leaf("Wait", ExecuteWaitCommand));

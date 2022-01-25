@@ -28,8 +28,14 @@ namespace BotProgramming.CyborgUprising
             var dependency = new BehaviorTree("Available Commands Condition");
             dependency.AddChild(new Leaf("Has Available Cyborgs", HasAvailableCyborgs));
             var loop = new Loop("Issue Troop Commands", dependency);
+
+            var increaseProduction = new Selector("Increase Production");
+            increaseProduction.AddChild(new IncreaseFactoryProduction("Increase Factory Production"));
             var attack = new LaunchAttack("Launch Attack");
-            loop.AddChild(attack);
+            increaseProduction.AddChild(attack);
+
+            
+            loop.AddChild(increaseProduction);
 
             var succeeder = new Succeeder("Command Succeeder");
             succeeder.AddChild(loop);

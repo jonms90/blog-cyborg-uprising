@@ -15,7 +15,7 @@ namespace BotProgramming.CyborgUprising
         {
             var attack = new Sequence("LaunchAttack");
             attack.AddChild(new Leaf("Has Friendly Factories", HasFriendlyFactories));
-            attack.AddChild(new Leaf("Find Factory", FindFriendlyFactory));
+            attack.AddChild(new Leaf("Find Factory", FindAvailableCyborgs));
             attack.AddChild(new Leaf("Find Target", FindTarget));
             attack.AddChild(new Leaf("Move Troops", ExecuteMoveCommand));
             Children.Add(attack);
@@ -28,24 +28,27 @@ namespace BotProgramming.CyborgUprising
 
         public Node.NodeStatus HasFriendlyFactories()
         {
-            if (Bot.Factories.Count > 0)
-            {
-                return Node.NodeStatus.Success;
-            }
-
-            return Node.NodeStatus.Failure;
+            return Bot.Factories.Count > 0 ? Node.NodeStatus.Success : Node.NodeStatus.Failure;
         }
 
         public Node.NodeStatus ExecuteMoveCommand()
         {
             var nextTarget = Bot.Battlefield.NextFactoryOnShortestPathBetween(_source, _target);
-            Bot.Commands.Add($"MOVE {_source.Id} {nextTarget.Id} {_source.Cyborgs}");
+            var moveCount = _source.Cyborgs;
+            Bot.Commands.Add($"MOVE {_source.Id} {nextTarget.Id} {moveCount}");
+            _source.Cyborgs -= moveCount;
             return Node.NodeStatus.Success;
         }
 
-        public Node.NodeStatus FindFriendlyFactory()
+        public Node.NodeStatus FindAvailableCyborgs()
         {
-            _source = Bot.Factories.First();
+            var factory = Bot.Factories.FirstOrDefault(f => f.Cyborgs > 0);
+            if (factory == null)
+            {
+                return NodeStatus.Failure;
+            }
+
+            _source = factory;
             return Node.NodeStatus.Success;
         }
 

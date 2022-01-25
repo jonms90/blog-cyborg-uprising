@@ -24,10 +24,27 @@ namespace BotProgramming.CyborgUprising
             Targets = new List<Factory>();
             Commands = new List<string>();
             _behavior = new BehaviorTree("Bot");
-            var strategy = new Selector("Strategy");
+            
+            var dependency = new BehaviorTree("Available Commands Condition");
+            dependency.AddChild(new Leaf("Has Available Cyborgs", HasAvailableCyborgs));
+            var loop = new Loop("Issue Troop Commands", dependency);
             var attack = new LaunchAttack("Launch Attack");
-            strategy.AddChild(attack);
-            strategy.AddChild(new Leaf("Wait", ExecuteWaitCommand));
+            loop.AddChild(attack);
+
+            var succeeder = new Succeeder("Command Succeeder");
+            succeeder.AddChild(loop);
+
+            var strategy = new Sequence("Strategy");
+            strategy.AddChild(succeeder);
+
+            var fallbackWait = new Sequence("Fallback Wait");
+            var hasCommands = new Leaf("Has issued commands", HasIssuedCommands);
+            var inverter = new Inverter("Commands Inverter");
+            inverter.AddChild(hasCommands);
+            fallbackWait.AddChild(inverter);
+            fallbackWait.AddChild(new Leaf("Wait", ExecuteWaitCommand));
+            
+            strategy.AddChild(fallbackWait);
             _behavior.AddChild(strategy);
             var factoryCount = _inputParser.ParseNextInteger();
             var linkCount = _inputParser.ParseNextInteger();
@@ -36,6 +53,11 @@ namespace BotProgramming.CyborgUprising
                 var link = _inputParser.ParseNextLink();
                 Battlefield.AddFactories(link);
             }
+        }
+
+        private Node.NodeStatus HasIssuedCommands()
+        {
+            return Commands.Count > 0 ? Node.NodeStatus.Success : Node.NodeStatus.Failure;
         }
 
         public void Update()
@@ -81,6 +103,11 @@ namespace BotProgramming.CyborgUprising
         {
             Bot.Commands.Add("WAIT");
             return Node.NodeStatus.Success;
+        }
+
+        public Node.NodeStatus HasAvailableCyborgs()
+        {
+            return Factories.Sum(x => x.Cyborgs) > 0 ? Node.NodeStatus.Success : Node.NodeStatus.Failure;
         }
     }
 }

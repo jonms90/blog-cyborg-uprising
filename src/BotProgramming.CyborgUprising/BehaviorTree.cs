@@ -14,7 +14,7 @@ namespace BotProgramming.CyborgUprising
 
         public override NodeStatus Process()
         {
-            return Children[CurrentChild].Process();
+            return Children[0].Process();
         }
 
         public void Print()

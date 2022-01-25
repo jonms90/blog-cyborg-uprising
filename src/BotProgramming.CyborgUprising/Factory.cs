@@ -5,7 +5,7 @@ namespace BotProgramming.CyborgUprising
 {
     public class Factory : Entity, IEqualityComparer<Factory>
     {
-        public int Cyborgs { get; }
+        public int Cyborgs { get; set; }
         public int Production { get; }
         public int Cooldown { get; }
         public IDictionary<Factory, int> ConnectedFactories { get; }

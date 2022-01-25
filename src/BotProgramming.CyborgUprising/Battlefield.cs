@@ -46,7 +46,7 @@ namespace BotProgramming.CyborgUprising
         /// <returns>The next factory on the shortest path between source and target.</returns>
         public Factory NextFactoryOnShortestPathBetween(Factory source, Factory target)
         {
-            if (target == source)
+            if (target.Equals(source))
             {
                 throw new ArgumentException("Target is equal to source", nameof(target));
             }

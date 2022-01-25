@@ -12,9 +12,21 @@ namespace BotProgramming.CyborgUprising
             var attack = new Sequence("LaunchAttack");
             attack.AddChild(new HasFriendlyFactories("Has Friendly Factories"));
             attack.AddChild(new Leaf("Find Factory", FindAvailableCyborgs));
-            attack.AddChild(new Leaf("Find Target", FindTarget));
+            var targetSelector = new Selector("Found Target");
+            var findTarget = new Leaf("Find Target", FindTarget);
+            targetSelector.AddChild(findTarget);
+            var inverter = new Inverter("Inverter");
+            inverter.AddChild(new Leaf("Reserve Cyborgs", ReserveRemainingCyborgs));
+            targetSelector.AddChild(inverter);
+            attack.AddChild(targetSelector);
             attack.AddChild(new Leaf("Move Troops", ExecuteMoveCommand));
             Children.Add(attack);
+        }
+
+        private NodeStatus ReserveRemainingCyborgs()
+        {
+            _source.Cyborgs = 0;
+            return NodeStatus.Success;
         }
 
         public override NodeStatus Process()
@@ -33,7 +45,8 @@ namespace BotProgramming.CyborgUprising
 
         public Node.NodeStatus FindAvailableCyborgs()
         {
-            var factory = Bot.Factories.FirstOrDefault(f => f.Cyborgs > 0);
+            var minimumRequiredCyborgs = Bot.Targets.OrderBy(t => t.Cyborgs).FirstOrDefault()?.Cyborgs ?? 0;
+            var factory = Bot.Factories.FirstOrDefault(f => f.Cyborgs > minimumRequiredCyborgs);
             if (factory == null)
             {
                 return NodeStatus.Failure;
@@ -45,13 +58,24 @@ namespace BotProgramming.CyborgUprising
 
         public Node.NodeStatus FindTarget()
         {
-            if (Bot.Targets.Count == 0)
+            // Does not care about distance at all for now. Find a weaker target.
+            var targets = Bot.Targets.Where(t => t.Cyborgs < _source.Cyborgs).ToList();
+            foreach (var t in targets)
             {
-                return Node.NodeStatus.Failure;
+                var distance = Bot.Battlefield.Factories[_source.Id].ConnectedFactories.First(f => f.Key.Id == t.Id).Value;
+                var extraCyborgsRequired = distance * t.Production;
+                if (t.Cyborgs + extraCyborgsRequired > _source.Cyborgs)
+                {
+                    continue;
+                }
+                else
+                {
+                    _target = t;
+                    return Node.NodeStatus.Success;
+                }
             }
 
-            _target = Bot.Targets.First();
-            return Node.NodeStatus.Success;
+            return Node.NodeStatus.Failure;
         }
 
     }

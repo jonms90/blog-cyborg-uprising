@@ -22,5 +22,15 @@
         {
             return Type == EntityType.Factory && Team == Team.Enemy;
         }
+
+        public bool IsNeutralFactory()
+        {
+            return Type == EntityType.Factory && Team == Team.Neutral;
+        }
+
+        public bool IsEnemyTroop()
+        {
+            return Type == EntityType.Troop && Team == Team.Enemy;
+        }
     }
 }

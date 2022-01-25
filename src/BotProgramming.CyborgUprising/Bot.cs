@@ -10,7 +10,9 @@ namespace BotProgramming.CyborgUprising
         private InputParser _inputParser;
         public static List<Factory> Factories;
         public static List<Factory> Targets;
+        public static List<Factory> Neutrals;
         public static List<string> Commands;
+        public static List<Troop> Enemies;
         private BehaviorTree _behavior;
 
         /// <summary>
@@ -21,7 +23,9 @@ namespace BotProgramming.CyborgUprising
             _inputParser = new InputParser();
             Battlefield = new Battlefield();
             Factories = new List<Factory>();
+            Neutrals = new List<Factory>();
             Targets = new List<Factory>();
+            Enemies = new List<Troop>();
             Commands = new List<string>();
             _behavior = new BehaviorTree("Bot");
 
@@ -29,13 +33,19 @@ namespace BotProgramming.CyborgUprising
             dependency.AddChild(new Leaf("Has Available Cyborgs", HasAvailableCyborgs));
             var loop = new Loop("Issue Troop Commands", dependency);
 
+            var defendFactories = new Leaf("Defend Factories", DefendFactories);
+
             var increaseProduction = new Selector("Increase Production");
             increaseProduction.AddChild(new IncreaseFactoryProduction("Increase Factory Production"));
+            increaseProduction.AddChild(new Expand("Expand To Neutral"));
             var attack = new LaunchAttack("Launch Attack");
             increaseProduction.AddChild(attack);
 
-            
-            loop.AddChild(increaseProduction);
+            var troopSequence = new Sequence("Troop Sequence");
+            troopSequence.AddChild(defendFactories);
+            troopSequence.AddChild(increaseProduction);
+
+            loop.AddChild(troopSequence);
 
             var succeeder = new Succeeder("Command Succeeder");
             succeeder.AddChild(loop);
@@ -61,6 +71,32 @@ namespace BotProgramming.CyborgUprising
             }
         }
 
+        private Node.NodeStatus DefendFactories()
+        {
+            // Reserve cyborgs to defend the next turn of attacks
+            var incomingEnemies = Enemies.Where(e => e.TurnsUntilArrival <= 3).GroupBy(e => e.Destination).ToList();
+            foreach (var group in incomingEnemies)
+            {
+                var targetedFactory = Factories.FirstOrDefault(f => f.Id == group.Key);
+                if (targetedFactory == null) // Not an attack
+                {
+                    continue;
+                }
+
+                var attackingCyborgs = group.Sum(g => g.CyborgCount);
+                if (targetedFactory.Cyborgs >= attackingCyborgs)
+                {
+                    targetedFactory.Cyborgs -= attackingCyborgs;
+                }
+                else
+                {
+                    targetedFactory.Cyborgs = 0;
+                }
+            }
+
+            return Node.NodeStatus.Success;
+        }
+
         private Node.NodeStatus HasIssuedCommands()
         {
             return Commands.Count > 0 ? Node.NodeStatus.Success : Node.NodeStatus.Failure;
@@ -70,6 +106,8 @@ namespace BotProgramming.CyborgUprising
         {
             Factories.Clear();
             Targets.Clear();
+            Neutrals.Clear();
+            Enemies.Clear();
             Commands.Clear();
             var entityCount = _inputParser.ParseNextInteger();
             for (var i = 0; i < entityCount; i++)
@@ -83,25 +121,17 @@ namespace BotProgramming.CyborgUprising
                 {
                     Targets.Add((Factory)entity);
                 }
+                else if(entity.IsNeutralFactory())
+                {
+                    Neutrals.Add((Factory)entity);
+                }
+                else if (entity.IsEnemyTroop())
+                {
+                    Enemies.Add((Troop)entity);
+                }
             }
 
             _behavior.Process();
-
-            //foreach (var factory in _factories)
-            //{
-            //    var target = _targets.FirstOrDefault();
-            //    if (target != null)
-            //    {
-            //        var destination =
-            //            _battlefield.NextFactoryOnShortestPathBetween(factory, target);
-            //        _commands.Add($"MOVE {factory.Id} {destination.Id} {factory.Cyborgs}");
-            //    }
-            //}
-
-            //if (_commands.Count == 0)
-            //{
-            //    _commands.Add("WAIT");
-            //}
             Console.WriteLine(string.Join(';', Commands));
         }
 

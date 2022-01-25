@@ -24,7 +24,7 @@ namespace BotProgramming.CyborgUprising
             Targets = new List<Factory>();
             Commands = new List<string>();
             _behavior = new BehaviorTree("Bot");
-            
+
             var dependency = new BehaviorTree("Available Commands Condition");
             dependency.AddChild(new Leaf("Has Available Cyborgs", HasAvailableCyborgs));
             var loop = new Loop("Issue Troop Commands", dependency);
@@ -43,7 +43,7 @@ namespace BotProgramming.CyborgUprising
             inverter.AddChild(hasCommands);
             fallbackWait.AddChild(inverter);
             fallbackWait.AddChild(new Leaf("Wait", ExecuteWaitCommand));
-            
+
             strategy.AddChild(fallbackWait);
             _behavior.AddChild(strategy);
             var factoryCount = _inputParser.ParseNextInteger();

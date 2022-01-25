@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BotProgramming.CyborgUprising
 {
@@ -19,14 +15,14 @@ namespace BotProgramming.CyborgUprising
 
         public void Print()
         {
-            Stack<Node> stack = new Stack<Node>();
+            var stack = new Stack<Node>();
             Node currentNode = this;
             stack.Push(currentNode);
 
             while (stack.Count != 0)
             {
-                Node nextNode = stack.Pop();
-                for (int i = nextNode.Children.Count - 1; i >= 0; i++)
+                var nextNode = stack.Pop();
+                for (var i = nextNode.Children.Count - 1; i >= 0; i++)
                 {
                     stack.Push(nextNode.Children[i]);
                 }

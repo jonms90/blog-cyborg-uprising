@@ -13,7 +13,7 @@ namespace BotProgramming.CyborgUprising
 
         public override NodeStatus Process()
         {
-            for (int i = 1; i <= 3; i++)
+            for (var i = 1; i <= 3; i++)
             {
                 var turnsUntilArrival = i;
                 var incomingCyborgs = Bot.Enemies.Where(e =>

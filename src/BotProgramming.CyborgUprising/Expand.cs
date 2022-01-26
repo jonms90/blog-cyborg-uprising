@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace BotProgramming.CyborgUprising
 {
@@ -54,7 +53,7 @@ namespace BotProgramming.CyborgUprising
                 var candidate2 = Bot.Neutrals.First(f => f.Id == closestExpansions.Skip(1).First().Id);
                 _target = candidate2.Production > candidate1.Production ? candidate2 : candidate1;
             }
-            
+
             return NodeStatus.Success;
         }
 

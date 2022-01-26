@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BotProgramming.CyborgUprising
+﻿namespace BotProgramming.CyborgUprising
 {
     public class MoveCyborgs : Node
     {

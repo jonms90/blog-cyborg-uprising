@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace BotProgramming.CyborgUprising
+﻿namespace BotProgramming.CyborgUprising
 {
     public class FactoryBehaviorTree : Node
     {
@@ -15,10 +12,10 @@ namespace BotProgramming.CyborgUprising
             var actions = new Selector();
             actions.AddChild(new Evacuate(_factory));
             actions.AddChild(new Defend(_factory));
-            actions.AddChild(new Leaf(IncreaseProduction));
             actions.AddChild(new Expand(_factory));
+            actions.AddChild(new Leaf(IncreaseProduction));
             actions.AddChild(new Attack(_factory));
-            
+
             var repeatSequence = new Sequence();
             repeatSequence.AddChild(new Leaf(HasAvailableCyborgs));
             repeatSequence.AddChild(actions);

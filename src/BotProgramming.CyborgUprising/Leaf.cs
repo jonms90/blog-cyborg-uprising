@@ -9,23 +9,23 @@
         public TickMulti ProcessMethodMulti;
         public int Index;
 
-        public Leaf(string name) : base(name)
+        public Leaf()
         {
 
         }
 
-        public Leaf(string name, Tick pm) : base(name)
+        public Leaf(Tick pm)
         {
             ProcessMethod = pm;
         }
 
-        public Leaf(string name, TickMulti pm, int index) : base(name)
+        public Leaf(TickMulti pm, int index)
         {
             ProcessMethodMulti = pm;
             Index = index;
         }
 
-        public Leaf(string name, Tick pm, int priority) : base(name, priority)
+        public Leaf(Tick pm, int priority) : base(priority)
         {
             ProcessMethod = pm;
         }

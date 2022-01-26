@@ -2,7 +2,7 @@
 {
     public class Sequence : Node
     {
-        public Sequence(string name) : base(name)
+        public Sequence()
         {
         }
 

@@ -2,7 +2,7 @@
 {
     public class Succeeder : Node
     {
-        public Succeeder(string name) : base(name)
+        public Succeeder()
         {
         }
 

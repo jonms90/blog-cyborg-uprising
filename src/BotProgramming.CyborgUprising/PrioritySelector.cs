@@ -4,7 +4,7 @@ namespace BotProgramming.CyborgUprising
 {
     public class PrioritySelector : Node
     {
-        public PrioritySelector(string name) : base(name)
+        public PrioritySelector()
         {
         }
 

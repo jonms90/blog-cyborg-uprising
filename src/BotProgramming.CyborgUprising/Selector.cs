@@ -2,7 +2,7 @@
 {
     public class Selector : Node
     {
-        public Selector(string name) : base(name)
+        public Selector()
         {
         }
 

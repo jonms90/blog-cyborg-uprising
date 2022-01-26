@@ -2,7 +2,7 @@
 {
     public class Inverter : Node
     {
-        public Inverter(string name) : base(name)
+        public Inverter()
         {
         }
 

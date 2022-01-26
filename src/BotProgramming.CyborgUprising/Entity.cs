@@ -32,5 +32,10 @@
         {
             return Type == EntityType.Troop && Team == Team.Enemy;
         }
+
+        public bool IsEnemyBomb()
+        {
+            return Type == EntityType.Bomb && Team == Team.Enemy;
+        }
     }
 }

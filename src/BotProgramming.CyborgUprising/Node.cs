@@ -4,22 +4,16 @@ namespace BotProgramming.CyborgUprising
 {
     public class Node
     {
-        public enum NodeStatus { Success, Running, Failure }
-
-        public NodeStatus Status;
+        public enum NodeStatus { Success, Failure }
         public List<Node> Children = new List<Node>();
-        public int CurrentChild = 0;
-        public string Name;
         public int Priority;
 
-        public Node(string name)
+        public Node()
         {
-            Name = name;
         }
 
-        public Node(string name, int priority)
+        public Node(int priority)
         {
-            Name = name;
             Priority = priority;
         }
 

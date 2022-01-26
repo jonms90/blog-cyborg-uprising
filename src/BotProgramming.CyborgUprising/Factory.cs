@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BotProgramming.CyborgUprising
 {
@@ -9,6 +10,7 @@ namespace BotProgramming.CyborgUprising
         public int Production { get; }
         public int Cooldown { get; }
         public IDictionary<Factory, int> ConnectedFactories { get; }
+        public Factory EvacuationTarget => ConnectedFactories.OrderBy(c => c.Value).First().Key;
 
         /// <summary>
         /// Instantiates a factory with a given Id without any known adjacent neighbors.
@@ -24,7 +26,8 @@ namespace BotProgramming.CyborgUprising
             Cyborgs = cyborgs;
             Production = production;
             Cooldown = cooldown;
-            ConnectedFactories = new Dictionary<Factory, int>();
+            ConnectedFactories =
+                new Dictionary<Factory, int>(Bot.Battlefield.Factories[id].ConnectedFactories);
         }
 
         /// <summary>
